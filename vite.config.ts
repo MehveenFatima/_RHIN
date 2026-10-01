@@ -6,7 +6,8 @@ import { VitePWA } from "vite-plugin-pwa";
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    host: "::",
+    // Listen on all IPv4/IPv6 interfaces (also lets a phone on the same Wi-Fi open the app).
+    host: true,
     port: 8080,
     // In development the API runs separately on :5000; proxying keeps requests same-origin.
     proxy: {
