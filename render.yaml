@@ -1,0 +1,21 @@
+# Render Blueprint — deploys RHIN as a single web service:
+# the Express API serves both /api/v1 and the built React app.
+services:
+  - type: web
+    name: rhin
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm --prefix backend ci && npm run build:all
+    startCommand: npm start
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: GROQ_API_KEY
+        sync: false # set the value in the Render dashboard; never commit it
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: DATA_FILE
+        value: ./data/rhin.json
+      - key: SEED_DEMO_DATA
+        value: "true"
