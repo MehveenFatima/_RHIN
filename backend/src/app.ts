@@ -32,6 +32,8 @@ export function createApp({ store, llm, corsOrigins = [], staticDir = null }: Ap
           "connect-src": ["'self'", "https://tile.openstreetmap.org"],
           "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
           "font-src": ["'self'", "https://fonts.gstatic.com"],
+          // Allow testing over plain HTTP on a local network (e.g. from a phone); TLS is handled by the host in production.
+          "upgrade-insecure-requests": null,
         },
       },
     }),
