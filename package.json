@@ -20,7 +20,8 @@
     "test": "vitest run && npm --prefix backend test",
     "test:web": "vitest run",
     "test:watch": "vitest",
-    "setup": "npm install && npm --prefix backend install"
+    "setup": "npm install && npm --prefix backend install",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",
@@ -37,7 +38,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-leaflet": "^4.2.1",
-    "react-router-dom": "^6.30.1",
+    "react-router-dom": "^7.18.4",
     "recharts": "^2.15.4",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
+    "@playwright/test": "^1.56.1",
     "@testing-library/jest-dom": "^6.6.0",
     "@testing-library/react": "^16.0.0",
     "@types/leaflet": "^1.9.22",
