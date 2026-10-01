@@ -1,26 +1,33 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import AshaWorkerView from "@/components/AshaWorkerView";
+import DistrictOfficerView from "@/components/DistrictOfficerView";
+import StateOfficerView from "@/components/StateOfficerView";
+import { Toaster } from "@/components/ui/sonner";
+import { OfflineSyncProvider } from "@/hooks/useOfflineSync";
+import Layout from "@/pages/Layout";
+import NotFound from "@/pages/NotFound";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: 1, staleTime: 5_000 } },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
+    <OfflineSyncProvider>
+      <Toaster position="top-center" richColors />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route element={<Layout />}>
+            <Route index element={<Navigate to="/asha" replace />} />
+            <Route path="/asha" element={<AshaWorkerView />} />
+            <Route path="/district" element={<DistrictOfficerView />} />
+            <Route path="/state" element={<StateOfficerView />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
-    </TooltipProvider>
+    </OfflineSyncProvider>
   </QueryClientProvider>
 );
 
