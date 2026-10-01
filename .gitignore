@@ -141,3 +141,11 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# RHIN runtime data and PWA dev output
+backend/data/
+dev-dist/
+
+# Playwright output
+test-results/
+playwright-report/
