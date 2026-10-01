@@ -7,7 +7,7 @@ import tseslint from "typescript-eslint";
 const unusedVars = ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }];
 
 export default tseslint.config(
-  { ignores: ["dist", "dev-dist", "backend/dist", "backend/data", "**/node_modules"] },
+  { ignores: ["dist", "dev-dist", "backend/dist", "backend/data", "test-results", "playwright-report", "**/node_modules"] },
   {
     // Frontend (React, browser)
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
@@ -34,7 +34,7 @@ export default tseslint.config(
   {
     // Backend, shared types and tooling config (Node)
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ["backend/**/*.ts", "shared/**/*.ts", "*.config.{js,ts}"],
+    files: ["backend/**/*.ts", "shared/**/*.ts", "e2e/**/*.ts", "*.config.{js,ts}"],
     languageOptions: {
       ecmaVersion: 2022,
       globals: globals.node,

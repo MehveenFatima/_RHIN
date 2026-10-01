@@ -6,6 +6,7 @@
 
 **Offline-first disease surveillance for rural India — from the ASHA worker's phone to the state health office.**
 
+![CI](https://github.com/MehveenFatima/_RHIN/actions/workflows/ci.yml/badge.svg)
 ![React](https://img.shields.io/badge/React_18-20232A?logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=white)
@@ -97,7 +98,7 @@ All three views share one backend, so a report synced from a phone appears on th
 | Backend | Node.js 20+, Express 5, TypeScript, Zod validation, Helmet, express-rate-limit |
 | AI | Groq Chat Completions API (OpenAI-compatible), model `llama-3.3-70b-versatile`, JSON mode |
 | Data | JSON file store with atomic writes (see [design decisions](#engineering-decisions)) |
-| Testing | Vitest, Supertest, Testing Library |
+| Testing | Vitest, Supertest, Testing Library, Playwright (end-to-end) |
 | CI / Deploy | GitHub Actions; Render Blueprint (`render.yaml`) |
 
 There is no authentication — the role tabs are open for demonstration (see [future work](#future-improvements)).
@@ -203,6 +204,7 @@ immediately re-raised by old cases.
 │   ├── pages/               Layout and 404
 │   └── test/                Frontend tests
 ├── public/                  Icons, PWA assets
+├── e2e/                     Playwright end-to-end tests (offline replay, dispatch, planning)
 ├── docs/screenshots/
 ├── .github/workflows/ci.yml Lint, type-check, test and build on every push/PR
 └── render.yaml              One-click Render deployment
@@ -282,10 +284,13 @@ curl -X POST http://localhost:5000/api/v1/ai/triage \
 ## Testing
 
 ```bash
-npm test            # frontend + backend suites
+npm test            # frontend + backend unit/integration suites
+npm run test:e2e    # browser end-to-end tests (Playwright) against the production build
 npm run lint
 npm run typecheck
 ```
+
+Before the first e2e run, install the browser once with `npx playwright install chromium`.
 
 - **Backend (27 tests):** detection thresholds, windowing, severity escalation and resolution handling; the Groq
   client with a mocked `fetch` (JSON mode request, schema mismatch, non-JSON, HTTP and network errors → fallback);
@@ -293,8 +298,14 @@ npm run typecheck
   generation); file persistence across restarts.
 - **Frontend (7 tests):** the offline queue, and the sync provider queuing reports while offline and replaying them
   when the `online` event fires.
+- **End-to-end (4 Playwright tests, `e2e/`):** in a real Chromium against the production server — a report saved
+  with the network switched off stays on the device, the app shell reloads offline from the service worker, and the
+  report reaches the server automatically when the connection returns; rule-based triage is labelled as such; the
+  Leaflet map shows all 8 villages and a pre-filled brief dispatches a team; the state view generates and deploys a
+  resource plan.
 
-CI runs lint, type-check, tests and the production build on every push and pull request.
+CI runs lint, type-check, unit tests and the production build on every push and pull request, then the
+end-to-end suite.
 
 ## Deployment
 
